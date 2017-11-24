@@ -19,13 +19,12 @@ public class Main {
     private static void addClasses(ArrayList<String> courseInputFile){
 
         ArrayList<Course> courseList = new ArrayList<>();
-        List<String> courselist = courseInputFile.subList(1,courseInputFile.size());
-        for(String course: courselist){
+        List<String> courseInputList = courseInputFile.subList(1,courseInputFile.size());
+        for(String course: courseInputList){
             String[] indexString = course.split("\\t");
             Course newCourse = new Course(indexString[0],indexString[1],indexString[2],indexString[3]);
-
+            courseList.add(newCourse);
         }
-
     }
 
     private static void addConstraints(ArrayList<String>  ConstraintsInputFile){
