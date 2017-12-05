@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Course {
 
@@ -6,6 +7,7 @@ public class Course {
     private ArrayList<String> fallSemesterDays;
     private ArrayList<String> springSemesterDays;
     private ArrayList<String> summerSemesterDays;
+    private ArrayList<Constraint> classConstraints;
 
     public Course(String courseName, String fallSemesterDays, String springSemesterDays, String summerSemesterDays) {
 
@@ -13,6 +15,7 @@ public class Course {
         this.fallSemesterDays = new ArrayList<>();
         this.springSemesterDays = new ArrayList<>();
         this.summerSemesterDays = new ArrayList<>();
+        this.classConstraints = new ArrayList<>();
         addCourseDays(this.fallSemesterDays, fallSemesterDays);
         addCourseDays(this.springSemesterDays, springSemesterDays);
         addCourseDays(this.summerSemesterDays, summerSemesterDays);
@@ -25,6 +28,26 @@ public class Course {
                 semester.add(String.valueOf(days.charAt(i)));
             }
         }
+    }
+
+    public ArrayList<String> getDaysBySeason(String season){
+        if(season.toUpperCase() == "FALL"){
+            return getFallSemesterDays();
+        }else if (season.toUpperCase() == "SPRING"){
+            return getSpringSemesterDays();
+        }else if (season.toUpperCase() == "SUMMER"){
+            return getSummerSemesterDays();
+        }else return null;
+    }
+
+    public Iterator<String> getDaysIteratorBySeason(String season){
+        if(season.toUpperCase() == "FALL"){
+            return getFallSemesterDays().iterator();
+        }else if (season.toUpperCase() == "SPRING"){
+            return getSpringSemesterDays().iterator();
+        }else if (season.toUpperCase() == "SUMMER"){
+            return getSummerSemesterDays().iterator();
+        }else return null;
     }
 
     public String getCourseName() {
@@ -59,6 +82,18 @@ public class Course {
         this.summerSemesterDays = summerSemesterDays;
     }
 
+    public boolean checkConstraint(Course courseB, int something){
+
+        boolean check = true;
+
+        if(constraintExists(courseB.getCourseName())){
+
+
+        }
+
+        return check;
+    }
+
     public boolean courseOffered(int semester, String day){
 
         switch (semester){
@@ -68,5 +103,21 @@ public class Course {
         }
 
         return false;
+    }
+
+    public boolean constraintExists(String courseB) {
+
+        for(Constraint constraint: classConstraints){
+            if(constraint.checkOperands(this.getCourseName(), courseB)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void addConstraint(Constraint newConstraint) {
+
+        this.classConstraints.add(newConstraint);
     }
 }
