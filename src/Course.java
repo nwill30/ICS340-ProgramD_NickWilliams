@@ -41,11 +41,11 @@ public class Course {
     }
 
     public Iterator<String> getDaysIteratorBySeason(String season){
-        if(season.toUpperCase() == "FALL"){
+        if(season.toUpperCase().equals("FALL")){
             return getFallSemesterDays().iterator();
-        }else if (season.toUpperCase() == "SPRING"){
+        }else if (season.toUpperCase().equals("SPRING")){
             return getSpringSemesterDays().iterator();
-        }else if (season.toUpperCase() == "SUMMER"){
+        }else if (season.toUpperCase().equals("SUMMER")){
             return getSummerSemesterDays().iterator();
         }else return null;
     }
@@ -97,9 +97,10 @@ public class Course {
     public boolean courseOffered(int semester, String day){
 
         switch (semester){
-            case 0 : return this.fallSemesterDays.contains(day);
-            case 1 : return this.springSemesterDays.contains(day);
-            case 2 : return this.summerSemesterDays.contains(day);
+
+            case 5 : return this.springSemesterDays.contains(day);
+            case 3 : return this.fallSemesterDays.contains(day);
+            case 1 : return this.summerSemesterDays.contains(day);
         }
 
         return false;

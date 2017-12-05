@@ -1,3 +1,5 @@
+import javafx.application.Application;
+
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
@@ -6,14 +8,13 @@ import static javafx.application.Application.launch;
 
 public class Main {
 
-    private ArrayList<String> courseList = new ArrayList<>();
-
-    public void start(String[] args) {
+    public static void main(String[] args) {
+        ArrayList<String> courseList = new ArrayList<>();
 
         File userDirectory = new File(System.getProperty("user.dir"));
 
         File courseFile = new File(String.format("%s\\%s", userDirectory.getPath(), "classes.txt"));
-        Hashtable<Integer, Course> courseTable = addClasses(readFileInput(courseFile));
+        Hashtable<Integer, Course> courseTable = addClasses(readFileInput(courseFile), courseList);
 
         File constraintsFile = new File(String.format("%s\\%s", userDirectory.getPath(), "constraints.txt"));
         addConstraints(readFileInput(constraintsFile), courseTable);
@@ -27,18 +28,18 @@ public class Main {
         r.setSeed(10);
         for (int course = 0; course < 30; course++) {
             int sem = r.nextInt(11);
-            Course currentCourse = courseTable.get(courseList.get(course));
+            Course currentCourse = courseTable.get(courseList.get(course).hashCode());
             boolean scheudleUpdated = generateSchedule(schedule, sem, currentCourse);
             while (!scheudleUpdated) {
                 sem = r.nextInt(11);
                 scheudleUpdated = generateSchedule(schedule, sem, currentCourse);
             }
-            System.out.println("Course " + currentCourse + "  is taken semester " + sem);
+            System.out.println("Course " + currentCourse.getCourseName() + "  is taken semester " + sem);
         }
     }
 
 
-    private boolean generateSchedule(Schedule schedule, int sem, Course currentCourse) {
+    private static boolean generateSchedule(Schedule schedule, int sem, Course currentCourse) {
         Semester semester = schedule.getSemesterByIndex(sem);
         Iterator<String> offeredDays = currentCourse.getDaysIteratorBySeason(semester.getSemesterSeason());
         while (offeredDays.hasNext()) {
@@ -49,37 +50,29 @@ public class Main {
         return false;
     }
 
-    private Hashtable<Integer, Course> addClasses(ArrayList<String> courseInputFile) {
+    private static Hashtable<Integer, Course> addClasses(ArrayList<String> courseInputFile, ArrayList<String> courseList) {
 
         Hashtable<Integer, Course> courseTable = new Hashtable();
         List<String> courseInputList = courseInputFile.subList(1, courseInputFile.size());
         for (String course : courseInputList) {
             String[] indexString = course.split("\\s+");
             Course newCourse = new Course(indexString[0], indexString[1], indexString[2], indexString[3]);
-            courseTable.put(courseHash(newCourse.getCourseName()), newCourse);
+            courseTable.put(newCourse.getCourseName().hashCode(), newCourse);
+
             courseList.add(indexString[0]);
         }
 
         return courseTable;
     }
 
-    private static Integer courseHash(String courseName) {
-
-        int hashIndex = 0;
-        for (int i = 0; i < courseName.length(); i++) {
-            hashIndex = hashIndex + (int) courseName.charAt(i);
-        }
-        System.out.println(hashIndex / courseName.length());
-        return hashIndex / courseName.length();
-    }
 
     private static void addConstraints(ArrayList<String> constraintsInputFile, Hashtable<Integer, Course> courseTable) {
 
         for (String readConstraint : constraintsInputFile) {
             String[] indexString = readConstraint.split("\\s+");
             Constraint newConstraint = new Constraint();
-            int courseAHash = courseHash(indexString[0]);
-            int courseBHash = courseHash(indexString[2]);
+            int courseAHash = indexString[0].hashCode();
+            int courseBHash = indexString[2].hashCode();
             newConstraint.setCourseA(courseTable.get(courseAHash));
             newConstraint.setCourseB(courseTable.get(courseBHash));
             newConstraint.setOperator(indexString[1]);
@@ -142,10 +135,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 
 }
