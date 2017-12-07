@@ -12,7 +12,7 @@ public class Semester {
     private ArrayList<Course> thursdayClass = new ArrayList<>();
     private ArrayList<Course> fridayClass = new ArrayList<>();
     private ArrayList<Course> saturdayClass = new ArrayList<>();
-    private ArrayList<Course> semesterCourseList = new ArrayList<>();
+    private ArrayList<String> semesterCourseList = new ArrayList<>();
     private ArrayList<Course> onlineClass = new ArrayList<>();
 
     public Semester(String semesterID) {
@@ -47,41 +47,49 @@ public class Semester {
                 case "U":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "U")) {
                         this.sundayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-U");
                         return true;
                     } else return false;
                 case "M":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "M")) {
                         this.mondayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-M");
                         return true;
                     } else return false;
                 case "T":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "T")) {
                         this.tuesdayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-T");
                         return true;
                     } else return false;
                 case "W":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "W")) {
                         this.wednsdayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-W");
                         return true;
                     } else return false;
                 case "H":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "H")) {
                         this.thursdayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-H");
                         return true;
                     } else return false;
                 case "F":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "F")) {
                         this.fridayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-F");
                         return true;
                     } else return false;
                 case "S":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "S")) {
                         this.saturdayClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-S");
                         return true;
                     } else return false;
                 case "O":
                     if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "O")) {
                                 this.onlineClass.add(course);
+                        this.semesterCourseList.add(course.getCourseName()+"-O");
                                 return true;
                     } else return false;
             }
@@ -178,11 +186,61 @@ public class Semester {
         this.onlineClass = onlineClass;
     }
 
-    public ArrayList<Course> getSemesterCourseList() {
+    public ArrayList<String> getSemesterCourseList() {
         return semesterCourseList;
     }
 
-    public void setSemesterCourseList(ArrayList<Course> semesterCourseList) {
+    public void setSemesterCourseList(ArrayList<String> semesterCourseList) {
         this.semesterCourseList = semesterCourseList;
+    }
+
+    public void removeCourse(Course course) {
+
+        for(int i = 0; i < semesterCourseList.size();i++){
+            if(course.getCourseName().equals(semesterCourseList.get(i).substring(0,semesterCourseList.get(i).length()-2))){
+                semesterCourseList.remove(i);
+            }
+        }
+    }
+
+    public boolean checkAddCourse(Course course, String courseDay) {
+
+        if (semesterCourseList.size() < 3) {
+            switch (courseDay) {
+                case "U":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "U")) {
+                        return true;
+                    } else return false;
+                case "M":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "M")) {
+                        return true;
+                    } else return false;
+                case "T":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "T")) {
+                        return true;
+                    } else return false;
+                case "W":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "W")) {
+                        return true;
+                    } else return false;
+                case "H":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "H")) {
+                        return true;
+                    } else return false;
+                case "F":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "F")) {
+                        return true;
+                    } else return false;
+                case "S":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "S")) {
+                        return true;
+                    } else return false;
+                case "O":
+                    if (course.courseOffered(Integer.parseInt(this.semesterID.substring(4)), "O")) {
+                        return true;
+                    } else return false;
+            }
+        }
+        return false;
     }
 }

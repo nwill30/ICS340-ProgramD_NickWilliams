@@ -8,6 +8,8 @@ public class Course {
     private ArrayList<String> springSemesterDays;
     private ArrayList<String> summerSemesterDays;
     private ArrayList<Constraint> classConstraints;
+    private int constraintsFailed = 0;
+    private ArrayList<Constraint> failedConstraintList;
 
     public Course(String courseName, String fallSemesterDays, String springSemesterDays, String summerSemesterDays) {
 
@@ -16,6 +18,7 @@ public class Course {
         this.springSemesterDays = new ArrayList<>();
         this.summerSemesterDays = new ArrayList<>();
         this.classConstraints = new ArrayList<>();
+        this.failedConstraintList = new ArrayList<>();
         addCourseDays(this.fallSemesterDays, fallSemesterDays);
         addCourseDays(this.springSemesterDays, springSemesterDays);
         addCourseDays(this.summerSemesterDays, summerSemesterDays);
@@ -82,16 +85,19 @@ public class Course {
         this.summerSemesterDays = summerSemesterDays;
     }
 
-    public boolean checkConstraint(Course courseB, int something){
+    public boolean checkConstraint(String courseB, int courseAValue, int courseBValue){
 
-        boolean check = true;
-
-        if(constraintExists(courseB.getCourseName())){
-
+        if(constraintExists(courseB)){
+            Constraint constraint = classConstraints.get(getConstraintIndex(courseB));
+            if(constraint.getCourseA().equals(this)){
+                return constraint.constraintValid(courseAValue,courseBValue);
+            }else{
+                return constraint.constraintValid(courseBValue, courseAValue);
+            }
 
         }
 
-        return check;
+        return false;
     }
 
     public boolean courseOffered(int semester, String day){
@@ -116,9 +122,68 @@ public class Course {
         return false;
     }
 
+    private int getConstraintIndex(String courseB) {
+
+        int constraintIndex = 0;
+        for(Constraint constraint: classConstraints){
+            if(constraint.checkOperands(this.getCourseName(), courseB)){
+                return constraintIndex;
+            }
+            constraintIndex++;
+        }
+        return -1;
+    }
+
+
 
     public void addConstraint(Constraint newConstraint) {
 
         this.classConstraints.add(newConstraint);
+    }
+
+    public int getConstraintsFailed() {
+        return constraintsFailed;
+    }
+
+    public void setConstraintsFailed(int constraintsFailed) {
+        this.constraintsFailed = constraintsFailed;
+    }
+
+    public void updateConstraintFailed(int i) {
+
+        this.constraintsFailed = this.constraintsFailed + i;
+    }
+
+    public Constraint getConstraint(String courseB) {
+
+        if(constraintExists(courseB)){
+            return classConstraints.get(getConstraintIndex(courseB));
+        }
+
+        return null;
+    }
+
+    public void addFailedConstraint(Constraint failedConstrant) {
+        this.failedConstraintList.add(failedConstrant);
+    }
+
+    public ArrayList<Constraint> getClassConstraints() {
+        return classConstraints;
+    }
+
+    public void setClassConstraints(ArrayList<Constraint> classConstraints) {
+        this.classConstraints = classConstraints;
+    }
+
+    public ArrayList<Constraint> getFailedConstraintList() {
+        return failedConstraintList;
+    }
+
+    public void setFailedConstraintList(ArrayList<Constraint> failedConstraintList) {
+        this.failedConstraintList = failedConstraintList;
+    }
+
+    public void clearFailedConstraintList(){
+        this.failedConstraintList.clear();
     }
 }

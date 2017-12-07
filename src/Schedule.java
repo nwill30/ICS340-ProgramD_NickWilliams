@@ -24,4 +24,24 @@ public class Schedule {
 
         return semesters.get(i);
     }
+
+    public ArrayList<Semester> getSemesters() {
+        return semesters;
+    }
+
+    public void setSemesters(ArrayList<Semester> semesters) {
+        this.semesters = semesters;
+    }
+
+    public String toString(){
+        StringBuilder output = new StringBuilder();
+        for(Semester semester: semesters){
+            output.append(semester.getSemesterID() + ":  ");
+            for(String couseDay: semester.getSemesterCourseList()) {
+                output.append(couseDay +"    ");
+            }
+            output.append("\r\n");
+        }
+        return output.toString();
+    }
 }

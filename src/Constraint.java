@@ -73,4 +73,31 @@ public class Constraint {
         }
         return valid;
     }
+
+    public boolean constraintValid(int courseAValue, int courseBValue){
+        try{
+            switch (this.operator){
+                case "==": return courseAValue == courseBValue;
+                case "<": return courseAValue < courseBValue;
+                case ">": return courseAValue > courseBValue;
+                case "<=": return courseAValue <= courseBValue;
+                case ">=": return courseAValue >= courseBValue;
+                case "!=": return courseAValue != courseBValue;
+            }
+        }catch(Exception  e){
+            System.out.println("Operator int <> 0-5");
+            throw e;
+        }
+        return false;
+    }
+
+    public Course getPairedCourse(Course course){
+        if(course.equals(this.courseA)){
+            return this.courseB;
+        }else if(course.equals(this.courseB)){
+            return this.courseA;
+        }
+
+        return null;
+    }
 }
